@@ -2,11 +2,11 @@ package com.caipiao.snatch.match.football;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.caipiao.snatch.match.football.service.FootballSnatchService;
 
-@Service
+@Component
 public class FootballSnatchFactory {
 	
 	@Autowired

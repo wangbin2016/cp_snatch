@@ -14,7 +14,7 @@ public class SnatchTest {
 		
 		//Jsoup.parse("http://info.sporttery.cn/interface/interface_mixed.php?action=fb_list&pke=0.7773626391180328&_=1525769234663", "3000");
 		
-		
+		System.out.println(url);
 		Connection conn = Jsoup.connect("http://info.sporttery.cn/interface/interface_mixed.php?action=fb_list");
 		conn.ignoreContentType(true);
 		conn.execute();

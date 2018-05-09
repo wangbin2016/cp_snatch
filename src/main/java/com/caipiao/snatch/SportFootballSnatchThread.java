@@ -1,14 +1,7 @@
 package com.caipiao.snatch;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.caipiao.lottery.entity.sport.vo.SportFootballMatchAward;
-import com.caipiao.lottery.service.sport.SportFootballDataService;
-import com.caipiao.snatch.match.football.FootballSnatchFactory;
-import com.caipiao.snatch.match.football.service.FootballSnatchService;
-
+import com.caipiao.snatch.match.football.SportFootballDataSnatch;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SportFootballSnatchThread implements Runnable{
 	@Autowired
-	FootballSnatchFactory footballSnatchFactory;
-	@Autowired
-	SportFootballDataService sportFootballDataService;
+	SportFootballDataSnatch sportFootballDataSnatch;
 	@Override
 	public void run() {
 		log.info("竞彩足球数据抓取线程启动");
@@ -31,20 +22,8 @@ public class SportFootballSnatchThread implements Runnable{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		String serviceName = getCacheConfigService();		
-		FootballSnatchService footballSnatchService = footballSnatchFactory.getFootballSnatchService(serviceName);
-		List<SportFootballMatchAward> list = footballSnatchService.snatchMatch();
-		sportFootballDataService.saveFootballData(list);
+		sportFootballDataSnatch.snatch();
 		log.info("保存竞彩数据成功");
-	}
-	
-	/**
-	 * 从缓存取抓取配置源
-	 * @return
-	 */
-	public String getCacheConfigService() {
-		return "footballSnatchServiceSporttery";
 	}
 
 }
