@@ -1,4 +1,4 @@
-package com.caipiao.snatch.match.football;
+package com.caipiao.snatch.match.football.service;
 
 import java.util.List;
 
