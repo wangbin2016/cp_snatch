@@ -1,4 +1,4 @@
-package com.caipiao.snatch;
+package com.caipiao.snatch.timer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.caipiao.snatch.match.football.SportFootballDataSnatch;

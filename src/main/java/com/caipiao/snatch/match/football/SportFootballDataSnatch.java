@@ -12,7 +12,9 @@ import com.caipiao.snatch.match.football.service.FootballSnatchService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 竞彩足球抓取类
+ * 竞彩足球抓取业务
+ * 根据缓存配置,取抓取实现,抓取数据
+ * 对比缓存数据并更新数据
  * @author WangBin
  *
  */
@@ -23,17 +25,23 @@ public class SportFootballDataSnatch {
 	FootballSnatchFactory footballSnatchFactory;
 	@Autowired
 	SportFootballDataService sportFootballDataService;
-	
+
 	public void snatch() {
-		String serviceName = getCacheConfigService();		
-		FootballSnatchService footballSnatchService = footballSnatchFactory.getFootballSnatchService(serviceName);
-		List<SportFootballMatchAward> list = footballSnatchService.snatchMatch();
-		sportFootballDataService.saveFootballData(list);
-		log.info("保存竞彩数据成功");
+		try {
+			String serviceName = getCacheConfigService();
+			FootballSnatchService footballSnatchService = footballSnatchFactory.getFootballSnatchService(serviceName);
+			List<SportFootballMatchAward> list = footballSnatchService.snatchMatch();
+			sportFootballDataService.saveOrUpdateFootballData(list);
+			log.info("保存竞彩数据成功");
+		} catch (Exception e) {
+			log.info("抓取竞彩数据异常...");
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * 从缓存取抓取配置源
+	 * 
 	 * @return
 	 */
 	public String getCacheConfigService() {
