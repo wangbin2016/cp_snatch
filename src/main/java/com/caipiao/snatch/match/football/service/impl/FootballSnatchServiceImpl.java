@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service("footballSnatchServiceSporttery")
 public class FootballSnatchServiceImpl implements FootballSnatchService {
 	@Autowired
-	private SportLeagueInfoService sportLeagueInfoService;
+	private SportLeagueInfoService sportLeagueInfoService_;
 	
 	@Override
 	public List<SportFootballMatchAward> snatchMatch() {
@@ -46,7 +46,7 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		String body = conn.response().body();
 		int index = body.indexOf("data=");
 		int end = body.indexOf(";getData");
-		body = body.substring(index, end);
+		body = body.substring(index, end).replace("data=", "");
 		log.info("竞彩足球抓取数据：" + body);
 		JSONArray arr = JSON.parseArray(body);
 		List<SportFootballMatchAward> list = new ArrayList<SportFootballMatchAward>();
@@ -81,10 +81,11 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 	private void saveSportLeagueInfo(SportFootballMatchAward sportFootballMatchAward, JSONArray match) {
 		JSONArray matchData = match.getJSONArray(0);// 对阵信息
 		String shortName = matchData.getString(1);//"亚冠"
-		
-		SportLeagueInfo sportLeagueInfo = sportLeagueInfoService.selectByLikeName(shortName);
+		SportLeagueInfo s = sportLeagueInfoService_.selectByPrimaryKey(1);
+		System.out.println(s);
+		SportLeagueInfo sportLeagueInfo = sportLeagueInfoService_.selectByLikeName(shortName);
 		if(sportLeagueInfo == null) {
-			Integer id = sportLeagueInfoService.selectTableId();
+			Integer id = sportLeagueInfoService_.selectTableId();
 			String color = matchData.getString(5);
 			String dcName = "";
 			String jcName = shortName;
@@ -96,7 +97,7 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 			sportLeagueInfo.setJcName(jcName);
 			sportLeagueInfo.setName(name);
 			sportLeagueInfo.setShortName(shortName);
-			sportLeagueInfoService.insert(sportLeagueInfo);
+			sportLeagueInfoService_.insert(sportLeagueInfo);
 			log.info("保存联赛数据成功："+sportLeagueInfo);
 		}
 		sportFootballMatchAward.setLeagueInfoId(sportLeagueInfo.getId());
@@ -172,7 +173,7 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		sportFootballMatchAward.setGuestTeam(guestTeam);
 		sportFootballMatchAward.setMatchTime(matchTime);
 		sportFootballMatchAward.setLineId(lineId);
-		sportFootballMatchAward.setInttime(matchDate);
+		sportFootballMatchAward.setIntTime(matchDate);
 		sportFootballMatchAward.setId(Integer.valueOf(matchDate+lineId));
 		sportFootballMatchAward.setCreateDate(new Date());
 	}

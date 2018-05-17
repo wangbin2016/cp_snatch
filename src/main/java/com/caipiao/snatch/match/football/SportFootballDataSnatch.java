@@ -3,7 +3,9 @@ package com.caipiao.snatch.match.football;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.caipiao.lottery.entity.sport.vo.SportFootballMatchAward;
 import com.caipiao.lottery.service.sport.SportFootballDataService;
@@ -18,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author WangBin
  *
  */
-@Component
+@Service()
 @Slf4j
 public class SportFootballDataSnatch {
 	@Autowired
@@ -44,7 +46,7 @@ public class SportFootballDataSnatch {
 	 * 
 	 * @return
 	 */
-	public String getCacheConfigService() {
+	private String getCacheConfigService() {
 		return "footballSnatchServiceSporttery";
 	}
 }
