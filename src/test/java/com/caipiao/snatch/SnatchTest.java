@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -23,6 +24,8 @@ public class SnatchTest {
 		DruidDataSource dataSource = (DruidDataSource)ac.getBean("dataSource");
 		System.out.println(dataSource.getUsername() +"   "+dataSource.getPassword());
 		log.info("初始化配置");
+		ac.toString();
+		((AbstractApplicationContext) ac).close();
 	}
 	
 	//@Test

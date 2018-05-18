@@ -21,7 +21,7 @@ import com.caipiao.lottery.entity.sport.award.JQSAward;
 import com.caipiao.lottery.entity.sport.award.RQSPFAward;
 import com.caipiao.lottery.entity.sport.award.SPFAward;
 import com.caipiao.lottery.entity.sport.vo.SportFootballMatchAward;
-import com.caipiao.lottery.service.sport.SportLeagueInfoService;
+import com.caipiao.lottery.service.SportLeagueInfoService;
 import com.caipiao.snatch.match.football.service.FootballSnatchService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service("footballSnatchServiceSporttery")
 public class FootballSnatchServiceImpl implements FootballSnatchService {
 	@Autowired
-	private SportLeagueInfoService sportLeagueInfoService_;
+	private SportLeagueInfoService sportLeagueInfoService;
 	
 	@Override
 	public List<SportFootballMatchAward> snatchMatch() {
@@ -53,9 +53,9 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		int size = arr.size();
 		for (int i = 0; i < size; i++) {
 			JSONArray match = arr.getJSONArray(i);
-			list.add(createSportFootballMatchAward(match));
+			SportFootballMatchAward sportFootball = createSportFootballMatchAward(match);
+			list.add(sportFootball);
 		}
-
 		return list;
 	}
 
@@ -81,11 +81,11 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 	private void saveSportLeagueInfo(SportFootballMatchAward sportFootballMatchAward, JSONArray match) {
 		JSONArray matchData = match.getJSONArray(0);// 对阵信息
 		String shortName = matchData.getString(1);//"亚冠"
-		SportLeagueInfo s = sportLeagueInfoService_.selectByPrimaryKey(1);
+		SportLeagueInfo s = sportLeagueInfoService.selectByPrimaryKey(1);
 		System.out.println(s);
-		SportLeagueInfo sportLeagueInfo = sportLeagueInfoService_.selectByLikeName(shortName);
+		SportLeagueInfo sportLeagueInfo = sportLeagueInfoService.selectByLikeName(shortName);
 		if(sportLeagueInfo == null) {
-			Integer id = sportLeagueInfoService_.selectTableId();
+			Integer id = sportLeagueInfoService.selectTableId();
 			String color = matchData.getString(5);
 			String dcName = "";
 			String jcName = shortName;
@@ -97,7 +97,7 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 			sportLeagueInfo.setJcName(jcName);
 			sportLeagueInfo.setName(name);
 			sportLeagueInfo.setShortName(shortName);
-			sportLeagueInfoService_.insert(sportLeagueInfo);
+			sportLeagueInfoService.insert(sportLeagueInfo);
 			log.info("保存联赛数据成功："+sportLeagueInfo);
 		}
 		sportFootballMatchAward.setLeagueInfoId(sportLeagueInfo.getId());
@@ -107,9 +107,18 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 	}
 	
 	public static void main(String[] args) {
+		/*String[] team = "鹿岛鹿角$-1$上海上港".split("\\$");//
+		System.out.println(team[1]);
 		String matchDate = "20180512001";
 		matchDate = matchDate.substring(1, matchDate.length());
-		System.out.println(Integer.valueOf(matchDate).intValue());
+		System.out.println(Integer.valueOf(matchDate).intValue());*/
+		
+		SPFAward award = new SPFAward(0.1,02,0.3);
+		
+		String a = JSON.toJSONString(award).toString();
+		System.out.println(a);
+		
+		
 	}
 
 	/**
@@ -139,12 +148,15 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		SportFootballAward.setId(sportFootballMatchAward.getId());
 		SportFootballAward.setLineId(sportFootballMatchAward.getLineId());
 		SportFootballAward.setIntTime(sportFootballMatchAward.getIntTime());
+		SportFootballAward.setCreateTime(new Date());
+		sportFootballMatchAward.setSportFootballAward(SportFootballAward);
 	}
 	
 	public double getSP(JSONArray spArr,int index) {
 		return spArr.getDoubleValue(index);
 	}
 
+	
 	/**
 	 * 解释对阵数据
 	 * @param sportFootballMatchAward
@@ -155,11 +167,10 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		// ["周三001", "亚冠", "鹿岛鹿角$-1$上海上港", "18-05-09 18:00", "107808", "#336600","亚洲冠军联赛", "鹿岛鹿角", "上海上港", "", "", "2018-05-09"]
 		// ["周三002", "日联赛杯", "新泻天鹅$+1$东京FC", "18-05-09 18:00", "107809", "#08855C","日本联赛杯", "新泻天鹅", "东京FC", "A组3", "A组4", "2018-05-09"]		
 		String weekInfo = matchData.getString(0);//周三001	
-		String[] team = matchData.getString(2).split("$");//"鹿岛鹿角$-1$上海上港"
+		String[] team = matchData.getString(2).split("\\$");//"鹿岛鹿角$-1$上海上港"
 		String homeGroup = matchData.getString(9);
 		String guestGroup = matchData.getString(10);
 		String matchDate = matchData.getString(11).replaceAll("-", "");//"2018-05-09" ->20180509
-		matchDate = matchDate.substring(1, matchDate.length());
 		String matchTimeStr = matchData.getString(3);		
 		String homeTeam = team[0];
 		int conncede = Integer.valueOf(team[1]);
@@ -175,7 +186,10 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		sportFootballMatchAward.setLineId(lineId);
 		sportFootballMatchAward.setIntTime(matchDate);
 		sportFootballMatchAward.setId(Integer.valueOf(matchDate+lineId));
-		sportFootballMatchAward.setCreateDate(new Date());
+		sportFootballMatchAward.setCreateTime(new Date());
 	}
 
+	public static void main1(String[] args) {
+		
+	}
 }
