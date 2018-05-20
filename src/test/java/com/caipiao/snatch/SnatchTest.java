@@ -25,7 +25,6 @@ public class SnatchTest {
 		System.out.println(dataSource.getUsername() +"   "+dataSource.getPassword());
 		log.info("初始化配置");
 		ac.toString();
-		((AbstractApplicationContext) ac).close();
 	}
 	
 	//@Test

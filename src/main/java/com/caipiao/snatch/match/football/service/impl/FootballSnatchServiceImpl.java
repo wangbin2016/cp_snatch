@@ -112,11 +112,9 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		String matchDate = "20180512001";
 		matchDate = matchDate.substring(1, matchDate.length());
 		System.out.println(Integer.valueOf(matchDate).intValue());*/
-		
-		SPFAward award = new SPFAward(0.1,02,0.3);
-		
-		String a = JSON.toJSONString(award).toString();
-		System.out.println(a);
+
+		String date = "20180509";
+		System.out.println(date.substring(2,date.length()));
 		
 		
 	}
@@ -171,6 +169,7 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		String homeGroup = matchData.getString(9);
 		String guestGroup = matchData.getString(10);
 		String matchDate = matchData.getString(11).replaceAll("-", "");//"2018-05-09" ->20180509
+		matchDate = matchDate.substring(2, matchDate.length());
 		String matchTimeStr = matchData.getString(3);		
 		String homeTeam = team[0];
 		int conncede = Integer.valueOf(team[1]);
