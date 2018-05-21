@@ -185,7 +185,7 @@ public class FootballSnatchServiceImpl implements FootballSnatchService {
 		sportFootballMatchAward.setLineId(lineId);
 		sportFootballMatchAward.setIntTime(matchDate);
 		sportFootballMatchAward.setId(Integer.valueOf(matchDate+lineId));
-		sportFootballMatchAward.setCreateTime(new Date());
+		sportFootballMatchAward.setCreateDate(new Date());
 	}
 
 	public static void main1(String[] args) {
